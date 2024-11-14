@@ -1,3 +1,5 @@
+## Defining circles without using OpenCV
+
 Python program to detect circles in binary images using a combination
 of Sobel edge detection and the Hough Circle Transform. The code processes
 n input image, identifies object boundaries, and then detects circles within
