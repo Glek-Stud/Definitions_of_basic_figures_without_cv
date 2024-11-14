@@ -28,7 +28,7 @@ def sobel_edge_detection(binary_matrix):
             edge_magnitude[i - 1, j - 1] = abs(gx) + abs(gy)
 
     unique_magnitudes = np.unique(edge_magnitude)
-    print("Величини країв:", unique_magnitudes)
+    print("Edge sizes:", unique_magnitudes)
 
     edge_threshold = 4 
     edges = (edge_magnitude >= edge_threshold).astype(int)
@@ -131,24 +131,26 @@ def hough_circle_transform(edges, radius_range, threshold_factor, min_distance, 
     return final_circles
 
 
-input_path = 'input/Test.bmp'
+input_path = 'input/Test3.png'
 img = Image.open(input_path).convert('1')  
 binary_matrix = np.array(img, dtype=int)
-print("Матриця:\n", binary_matrix)
+print("Matrix:\n", binary_matrix)
 
 edges = sobel_edge_detection(binary_matrix)
-print("Границі:\n", edges)
+print("Boundaries mask:\n", edges)
 
 box = find_bounding_boxes(binary_matrix)
-print("Периметри:\n", box)
+print("Perimeters:\n", box)
 
 radius_range = calculate_max_radius(box)
-print("Границя радіусів:\n", radius_range)
+print("Radius limit:\n", radius_range)
 
-#threshold_factor = 0.8 #Test2
-threshold_factor = 0.9 #Test
-#threshold_factor = 0.7 #Test3
-#threshold_factor = 0.8 #Test5
+#Examples 
+
+threshold_factor = 0.8
+#Test1 0.8
+#Test2 0.7
+#Test3 0.8 
 
 min_distance = 10
 theta_step = 2
@@ -157,7 +159,7 @@ circles = hough_circle_transform(edges, radius_range, threshold_factor, min_dist
 diameters = [(x, y, radius * 2) for (x, y, radius) in circles]
 
 for (x, y, diameter) in diameters:
-    print(f"Коло з центром в ({x}, {y}), його діаметр: {diameter}")
+    print(f"A circle centered at ({x}, {y}), its diameter: {diameter}")
 
 original_img = Image.open(input_path).convert('RGB')
 draw = ImageDraw.Draw(original_img)
@@ -168,18 +170,18 @@ for circle in circles:
 plt.figure(figsize=(10, 5))
 plt.subplot(1, 3, 1)
 plt.imshow(binary_matrix, cmap='gray')
-plt.title('Бінарне зображення')
+plt.title('Binary image')
 plt.axis('off')
 
 plt.subplot(1, 3, 2)
 plt.imshow(binary_matrix, cmap='gray')
 plt.imshow(edges, cmap='gray') 
-plt.title('Границі обектів')
+plt.title('Object boundaries')
 plt.axis('off')
 
 plt.subplot(1, 3, 3)
 plt.imshow(original_img)
-plt.title('Знайдені кола')
+plt.title('Found circles')
 plt.axis('off')
 
 plt.tight_layout()
